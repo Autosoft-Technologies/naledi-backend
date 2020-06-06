@@ -3,7 +3,7 @@ const Note = require('../models/note.model.js');
 // Create and Save a new Note
 exports.create = (req, res) => {
     // Validate request
-    if(!req.body.content) {
+    if (!req.body.content) {
         return res.status(400).send({
             message: "Note content can not be empty"
         });
@@ -12,7 +12,14 @@ exports.create = (req, res) => {
     // Create a Note
     const note = new Note({
         title: req.body.title || "Untitled Note",
-        content: req.body.content
+        poster: req.body.poster,
+        time: req.body.time,
+        location: req.body.location,
+        entrance: req.body.entrance,
+        timezone: "EAT",
+        views: 0,
+        description: req.body.description,
+        userId: req.body.userId,
     });
 
     // Save Note in the database
@@ -42,14 +49,14 @@ exports.findAll = (req, res) => {
 exports.findOne = (req, res) => {
     Note.findById(req.params.noteId)
         .then(note => {
-            if(!note) {
+            if (!note) {
                 return res.status(404).send({
                     message: "Note not found with id " + req.params.noteId
                 });
             }
             res.send(note);
         }).catch(err => {
-        if(err.kind === 'ObjectId') {
+        if (err.kind === 'ObjectId') {
             return res.status(404).send({
                 message: "Note not found with id " + req.params.noteId
             });
@@ -63,7 +70,7 @@ exports.findOne = (req, res) => {
 // Update a note identified by the noteId in the request
 exports.update = (req, res) => {
     // Validate Request
-    if(!req.body.content) {
+    if (!req.body.content) {
         return res.status(400).send({
             message: "Note content can not be empty"
         });
@@ -75,14 +82,14 @@ exports.update = (req, res) => {
         content: req.body.content
     }, {new: true})
         .then(note => {
-            if(!note) {
+            if (!note) {
                 return res.status(404).send({
                     message: "Note not found with id " + req.params.noteId
                 });
             }
             res.send(note);
         }).catch(err => {
-        if(err.kind === 'ObjectId') {
+        if (err.kind === 'ObjectId') {
             return res.status(404).send({
                 message: "Note not found with id " + req.params.noteId
             });
@@ -97,14 +104,14 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
     Note.findByIdAndRemove(req.params.noteId)
         .then(note => {
-            if(!note) {
+            if (!note) {
                 return res.status(404).send({
                     message: "Note not found with id " + req.params.noteId
                 });
             }
             res.send({message: "Note deleted successfully!"});
         }).catch(err => {
-        if(err.kind === 'ObjectId' || err.name === 'NotFound') {
+        if (err.kind === 'ObjectId' || err.name === 'NotFound') {
             return res.status(404).send({
                 message: "Note not found with id " + req.params.noteId
             });
