@@ -3,9 +3,9 @@ const Note = require('../models/note.model.js');
 // Create and Save a new Note
 exports.create = (req, res) => {
     // Validate request
-    if (!req.body.content) {
+    if (!req.body.title) {
         return res.status(400).send({
-            message: "Note content can not be empty"
+            message: "Event can not be empty"
         });
     }
 
@@ -16,7 +16,7 @@ exports.create = (req, res) => {
         time: req.body.time,
         location: req.body.location,
         entrance: req.body.entrance,
-        timezone: "EAT",
+        timezone: req.body.timezone,
         views: 0,
         description: req.body.description,
         userId: req.body.userId,
