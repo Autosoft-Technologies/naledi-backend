@@ -1,4 +1,5 @@
 const Note = require('../models/note.model.js');
+const Profile = require('../models/profile.model');
 
 // Create and Save a new Note
 exports.create = (req, res) => {
@@ -36,6 +37,31 @@ exports.create = (req, res) => {
     });
 };
 
+// Create Profile and Save to mongo
+exports.createProfile = (req, res, next) => {
+
+    // Create a Note
+    const user = new Profile({
+        name: req.body.name,
+        email: req.body.email,
+        phone: req.body.phone,
+        password: req.body.password,
+        avatar: req.file.filename,
+    });
+    console.log(req.body)
+    // Save Note in the database
+    user.save()
+        .then(data => {
+            res.send(data);
+        }).catch(err => {
+        res.status(500).send({
+            message: err.message || "Some error occurred while creating the User profile."
+        });
+    });
+
+};
+
+
 // Retrieve and return all notes from the database.
 exports.findAll = (req, res) => {
     Note.find()
@@ -47,6 +73,19 @@ exports.findAll = (req, res) => {
         });
     });
 };
+
+// Retrieve and return all notes from the database.
+exports.findUsers = (req, res) => {
+    Profile.find()
+        .then(notes => {
+            res.send(notes);
+        }).catch(err => {
+        res.status(500).send({
+            message: err.message || "Some error occurred while retrieving notes."
+        });
+    });
+};
+
 
 // Find a single note with a noteId
 exports.findOne = (req, res) => {
